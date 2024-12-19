@@ -2,6 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: my-node-app
+  labels:
+    app: my-node-app
 spec:
   replicas: 1
   selector:
@@ -14,6 +16,6 @@ spec:
     spec:
       containers:
       - name: my-node-app
-        image: <your-dockerhub-username>/my-node-app:latest
+        image: devkhuman3/my-node-app:latest
         ports:
         - containerPort: 3001

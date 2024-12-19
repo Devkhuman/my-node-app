@@ -33,5 +33,25 @@ jobs:
       - name: Build Docker image
         run: |
           docker build -t devkhuman3/my-node-app .
-          docker login -u ${{ secrets.devkhuman3 }} -p ${{ secrets.HareKrishna@5 }}
-          docker push devkhuman3/my-node-app
+          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          docker push devkhuman3/my-node-apps
+
+      - name: Deploy to Kubernetes
+        run: |
+          kubectl apply -f deployment.yaml
+          kubectl apply -f service.yaml
+
+      # Notify Slack on success
+      - name: Notify Slack on success
+        if: success()  # Only run on success
+        run: |
+          curl -X POST -H 'Content-type: application/json' --data '{"text":"Deployment successful!"}' ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      # Notify Slack on failure
+      - name: Notify Slack on failure
+        if: failure()  # Only run on failure
+        run: |
+          curl -X POST -H 'Content-type: application/json' --data '{"text":"Deployment failed!"}' ${{ secrets.SLACK_WEBHOOK_URL }}
+
+
+
