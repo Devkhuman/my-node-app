@@ -57,6 +57,10 @@ jobs:
           kubectl apply -f deployment.yaml
           kubectl apply -f service.yaml
 
+      - name: Apply Kubernetes Deployment
+        run: kubectl apply -f k8s/deployment.yaml --validate=false
+        
+
       # Notify Slack on success
       - name: Notify Slack on success
         if: success()  # Only run on success
