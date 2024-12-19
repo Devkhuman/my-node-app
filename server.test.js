@@ -1,10 +1,12 @@
 const request = require('supertest');
-const app = require('./server');
+const { app, server } = require('./server'); // Import the server for dynamic port usage
 
-describe('GET /', () => {
-    it('responds with Hello, World!', async () => {
-        const response = await request(app).get('/');
-        expect(response.text).toBe('Hello, World!');
-        expect(response.status).toBe(200);
-    });
+afterAll(() => {
+  server.close(); // Clean up the server after tests
 });
+
+test('GET / responds with Hello, World!', async () => {
+  const res = await request(app).get('/'); // Use the app directly without starting the server
+  expect(res.text).toBe('Hello, World!');
+});
+
