@@ -34,7 +34,7 @@ jobs:
         run: |
           docker build -t devkhuman3/my-node-app .
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-          docker push devkhuman3/my-node-apps
+          docker push devkhuman3/my-node-app
 
       - name: Deploy to Kubernetes
         run: |
@@ -52,6 +52,10 @@ jobs:
         if: failure()  # Only run on failure
         run: |
           curl -X POST -H 'Content-type: application/json' --data '{"text":"Deployment failed!"}' ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      - name: Set executable permissions
+        run: chmod +x ./<script-name>
+        
 
 
 
