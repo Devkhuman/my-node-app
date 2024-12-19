@@ -23,6 +23,16 @@ jobs:
         with:
           node-version: '16'
 
+      # Set permissions for Jest
+      - name: Set Jest executable permissions
+        run: chmod +x ./node_modules/.bin/jest
+
+      # Install dependencies and run tests
+      - name: Install dependencies and run tests
+        run: |
+          npm install
+          npm test
+
       # Install dependencies and run tests
       - name: Install dependencies and run tests
         run: |
@@ -33,8 +43,14 @@ jobs:
       - name: Build Docker image
         run: |
           docker build -t devkhuman3/my-node-app .
-          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
           docker push devkhuman3/my-node-app
+
+      # Deploy to Kubernetes
+      - name: Set up Kubernetes
+        uses: azure/setup-kubectl@v3
+        with:
+          version: 'v1.30.5'
 
       - name: Deploy to Kubernetes
         run: |
@@ -52,10 +68,3 @@ jobs:
         if: failure()  # Only run on failure
         run: |
           curl -X POST -H 'Content-type: application/json' --data '{"text":"Deployment failed!"}' ${{ secrets.SLACK_WEBHOOK_URL }}
-
-      - name: Set executable permissions
-        run: chmod +x ./<script-name>
-        
-
-
-
