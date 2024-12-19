@@ -19,6 +19,4 @@ EXPOSE 3001
 # Command to run the application
 CMD ["node", "server.js"]
 
-RUN chmod +x /usr/src/app/<script-name>
-
 
